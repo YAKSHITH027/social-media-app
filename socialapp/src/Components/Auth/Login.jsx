@@ -57,7 +57,7 @@ const Login = () => {
             to={REGISTER}
             as={RouterLink}
             color="teal.800"
-            frontWeight="medium"
+            fontWeight="medium"
             _hover={{ background: "green.100" }}
           >
             Register
