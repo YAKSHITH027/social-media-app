@@ -11,10 +11,31 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import { REGISTER } from "../../Routes/AllRoutes";
+import { DASHBOARD, REGISTER } from "../../Routes/AllRoutes";
 import { Link as RouterLink } from "react-router-dom";
+import { useLogin } from "../../CustomHooks/Auth";
+import { useForm } from "react-hook-form";
+import { emailValidate, passwordValidate } from "../../utils/form-validate";
+import { async } from "@firebase/util";
 
 const Login = () => {
+  const { login, isLoading } = useLogin();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  console.log(errors);
+  async function handleLogin(data) {
+    let success = await login({
+      email: data.email,
+      password: data.password,
+      redirectTo: DASHBOARD,
+    });
+    if (success) reset();
+  }
+
   return (
     <Center h="100vh">
       <Box
@@ -28,16 +49,28 @@ const Login = () => {
         <Heading mb="4" size="lg">
           Log In
         </Heading>
-        <form onSubmit={() => {}}>
-          <FormControl isInvalid={true} py="2">
+        <form onSubmit={handleSubmit(handleLogin)}>
+          <FormControl isInvalid={errors.email} py="2">
             <FormLabel>Email</FormLabel>
-            <Input type="email" placeholder="Email" />
-            <FormErrorMessage>This is an error message</FormErrorMessage>
+            <Input
+              type="email"
+              placeholder="Email"
+              {...register("email", emailValidate)}
+            />
+            <FormErrorMessage>
+              {errors.email && errors.email.message}
+            </FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={true}>
+          <FormControl isInvalid={errors.password}>
             <FormLabel>password</FormLabel>
-            <Input type="password" placeholder="password" />
-            <FormErrorMessage>This is an error message</FormErrorMessage>
+            <Input
+              type="password"
+              placeholder="password"
+              {...register("password", passwordValidate)}
+            />
+            <FormErrorMessage>
+              {errors.password && errors.password.message}
+            </FormErrorMessage>
           </FormControl>
           <Button
             mt="4"
@@ -45,6 +78,7 @@ const Login = () => {
             size="md"
             colorScheme="green"
             bg="blue"
+            isLoading={isLoading}
             color="white"
             w="full"
           >

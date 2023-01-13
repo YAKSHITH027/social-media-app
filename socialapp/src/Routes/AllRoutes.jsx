@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Login from "../Components/Auth/Login";
 import Register from "../Components/Auth/Register";
 import Dashboard from "../Components/Dashboard/Dashboard";
+import Navbar from "../Components/Navbar/Navbar";
 import Protected from "./Protected";
 export const ROOT = "/";
 export const LOGIN = "/login";
@@ -19,6 +20,7 @@ const AllRoutes = () => {
           path={DASHBOARD}
           element={
             <Protected>
+              <Navbar />
               <Dashboard />
             </Protected>
           }
